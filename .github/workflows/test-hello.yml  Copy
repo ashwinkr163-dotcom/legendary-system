@@ -1,0 +1,30 @@
+
+name: Test Legendary Build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-hello:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get our code
+        uses: actions/checkout@v4
+
+      - name: Download GNU Hello
+        run: |
+          curl -fL -o hello.tar.gz https://ftp.gnu.org/gnu/hello/hello-2.12.3.tar.gz
+          tar -xzf hello.tar.gz
+
+      - name: Run our build recipe
+        run: |
+          bash packages/hello/build.sh \
+            "$PWD/hello-2.12.3" "$PWD/output"
+
+      - name: Test the compiled program
+        run: |
+          ./output/usr/bin/hello
